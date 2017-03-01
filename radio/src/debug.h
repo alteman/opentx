@@ -124,11 +124,18 @@ enum TraceEvent {
   ff_f_write_move_window,
 
   audio_getNextFilledBuffer_skip = 60,
+  
+  rssi_debug1 = 71,
+  rssi_debug2,
+  rssi_debug3,
+  rssi_debug4,
 };
 
 struct TraceElement {
+#ifdef __arm__ 
   gtime_t time;
   uint8_t time_ms;
+#endif
   enum TraceEvent event;
   uint32_t data;
 };

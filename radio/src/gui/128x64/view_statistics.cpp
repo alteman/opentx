@@ -199,3 +199,39 @@ void menuStatisticsDebug(event_t event)
   lcdDrawText(4*FW, 7*FH+1, STR_MENUTORESET);
   lcdInvertLastLine();
 }
+
+#if defined(DEBUG_TRACE_BUFFER)
+void menuTraceBuffer(event_t event)
+{
+  SIMPLE_SUBMENU("Trace Buffer", TRACE_BUFFER_LEN);
+
+  uint8_t y = 0;
+  uint8_t k = 0;
+  int8_t sub = menuVerticalPosition;
+
+  lcdDrawChar(0, FH, '#');
+  lcdDrawText(4*FW, FH, "Ev");
+  lcdDrawText(8*FW, FH, "Data");
+
+  for (uint8_t i=0; i<LCD_LINES-2; i++) {
+    y = 1 + (i+2)*FH;
+    k = i+menuVerticalOffset;
+
+    //item
+    lcdDrawNumber(0, y, k, LEFT | (sub==k ? INVERS : 0));
+
+    const struct TraceElement * te = getTraceElement(k);
+    if (te) {
+      //event
+      lcdDrawNumber(4*FW, y, te->event, LEADING0|LEFT, 3);
+      //data
+      lcdDrawHexNumber(8*FW, y, (uint16_t)(te->data >> 16));
+      lcdDrawHexNumber(10*FW, y, (uint16_t)(te->data & 0xFFFF));
+    }
+
+  }
+
+
+}
+#endif //#if defined(DEBUG_TRACE_BUFFER)
+

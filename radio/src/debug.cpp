@@ -47,17 +47,23 @@ void debugPrintf(const char * format, ...)
 #if defined(DEBUG_TRACE_BUFFER)
 static struct TraceElement traceBuffer[TRACE_BUFFER_LEN];
 static uint8_t traceBufferPos;
+#ifdef __arm__ 
 extern Fifo<uint8_t, 512> serial2TxFifo;
+#endif
 gtime_t filltm(const gtime_t *t, struct gtm *tp);
 
 void trace_event(enum TraceEvent event, uint32_t data)
 {
   if (traceBufferPos >= TRACE_BUFFER_LEN) return;
+#ifdef __arm__ 
   __disable_irq();
+#endif
   struct TraceElement * p = &traceBuffer[traceBufferPos++];
+#ifdef __arm__ 
   __enable_irq();
   p->time = g_rtcTime;
   p->time_ms = g_ms100;
+#endif
   p->event = event;
   p->data = data;
 }
@@ -66,8 +72,10 @@ void trace_event_i(enum TraceEvent event, uint32_t data)
 {
   if (traceBufferPos >= TRACE_BUFFER_LEN) return;
   struct TraceElement * p = &traceBuffer[traceBufferPos++];
+#ifdef __arm__ 
   p->time = g_rtcTime;
   p->time_ms = g_ms100;
+#endif
   p->event = event;
   p->data = data;
 }
@@ -79,7 +87,7 @@ const struct TraceElement * getTraceElement(uint16_t idx)
   return 0;
 }
 
-
+#ifdef __arm__ 
 void dumpTraceBuffer()
 {
   TRACE("Dump of Trace Buffer (%s " DATE " " TIME "):", vers_stamp);
@@ -101,6 +109,7 @@ void dumpTraceBuffer()
   }
   TRACE("End of Trace Buffer dump");
 }
+#endif
 #endif
 
 #if defined(DEBUG_INTERRUPTS)
