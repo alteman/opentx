@@ -723,6 +723,7 @@ class MavlinkData {
     MavlinkData() { clear();}
     unsigned int rc_rssi_scale;
     unsigned int pc_rssi_en;
+    unsigned int rssi_db;
     void clear() { memset(this, 0, sizeof(MavlinkData)); }
 };
 

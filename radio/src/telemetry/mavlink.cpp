@@ -117,21 +117,15 @@ static inline void REC_MAVLINK_MSG_ID_SYS_STATUS(const mavlink_message_t* msg) {
 #endif
 }
 
-/*!	\brief Receive rc channels
- *
- */
-static inline void REC_MAVLINK_MSG_ID_RC_CHANNELS(const mavlink_message_t* msg) {
-	uint8_t temp_scale = 5 + g_model.mavlink.rc_rssi_scale;
-	telemetry_data.rc_rssi =  mavlink_msg_rc_channels_get_rssi(msg) * 20 / temp_scale;
-}
-
-/*!	\brief Receive raw rc channels
- *
- */
-static inline void REC_MAVLINK_MSG_ID_RC_CHANNELS_RAW(const mavlink_message_t* msg) {
-	uint8_t temp_rssi =(mavlink_msg_rc_channels_raw_get_rssi(msg) * 100) / 255;
-	uint8_t temp_scale = 25 + g_model.mavlink.rc_rssi_scale * 5;
-	telemetry_data.rc_rssi =  (temp_rssi * 100) / temp_scale;
+static inline void calc_rc_rssi(uint8_t msg_rssi)
+{
+    if (g_model.mavlink.rssi_db) {
+        telemetry_data.rc_rssi = msg_rssi;
+    } else {
+        uint8_t temp_rssi = (msg_rssi * 100) / 255;
+        uint8_t temp_scale = 25 + g_model.mavlink.rc_rssi_scale * 5;
+        telemetry_data.rc_rssi =  (temp_rssi * 100) / temp_scale;
+    }
 }
 
 /*!	\brief Arducopter specific radio message
@@ -378,10 +372,10 @@ static inline void handleMessage(mavlink_message_t* p_rxmsg) {
 		REC_MAVLINK_MSG_ID_SYS_STATUS(p_rxmsg);
 		break;
 	case MAVLINK_MSG_ID_RC_CHANNELS:
-		REC_MAVLINK_MSG_ID_RC_CHANNELS(p_rxmsg);
+		calc_rc_rssi(mavlink_msg_rc_channels_get_rssi(p_rxmsg));
 		break;
 	case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
-		REC_MAVLINK_MSG_ID_RC_CHANNELS_RAW(p_rxmsg);
+		calc_rc_rssi(mavlink_msg_rc_channels_raw_get_rssi(p_rxmsg));
 		break;
 	case MAVLINK_MSG_ID_RADIO:
 		REC_MAVLINK_MSG_ID_RADIO(p_rxmsg);
@@ -497,7 +491,7 @@ static void MAVLINK_parse_char(uint8_t c) {
 #endif
 		if (c != (p_rxmsg->checksum & 0xFF)) {
 			// Check first checksum byte
-			p_status->parse_error = 3;
+            p_status->parse_error = 3;
 		} else {
 			p_status->parse_state = MAVLINK_PARSE_STATE_GOT_CRC1;
 		}
@@ -506,7 +500,7 @@ static void MAVLINK_parse_char(uint8_t c) {
 	case MAVLINK_PARSE_STATE_GOT_CRC1:
 		if (c != (p_rxmsg->checksum >> 8)) {
 			// Check second checksum byte
-			p_status->parse_error = 4;
+            p_status->parse_error = 4;
 		} else {
 			// Successfully got message
 			if (mav_heartbeat < 0)

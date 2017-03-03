@@ -459,6 +459,7 @@ void modelDefault(uint8_t id)
 #if defined(TELEMETRY_MAVLINK)
   g_model.mavlink.rc_rssi_scale = 15;
   g_model.mavlink.pc_rssi_en = 1;
+  g_model.mavlink.rssi_db = 0;
 #endif
 
 #if !defined(EEPROM)

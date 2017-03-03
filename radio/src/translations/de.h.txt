@@ -1082,6 +1082,7 @@
 #if defined(TELEMETRY_MAVLINK)
   #define TR_MAVLINK_RC_RSSI_SCALE_LABEL   "Max RSSI"
   #define TR_MAVLINK_PC_RSSI_EN_LABEL      "PC RSSI EN"
+  #define TR_MAVLINK_RSSI_DB_LABEL         "RSSI dB"
   #define TR_MAVMENUSETUP_TITLE            "Mavlink Setup"
   #define TR_MAVLINK_BAUD_LABEL            "Baudrate"
   #define TR_MAVLINK_INFOS                 "INFOS"

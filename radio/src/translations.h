@@ -995,6 +995,7 @@ extern const pm_char STR_BLCOLOR[];
 #if defined(TELEMETRY_MAVLINK)
   extern const pm_char STR_MAVLINK_RC_RSSI_SCALE_LABEL[];
   extern const pm_char STR_MAVLINK_PC_RSSI_EN_LABEL[];
+  extern const pm_char STR_MAVLINK_RSSI_DB_LABEL[];
   extern const pm_char STR_MAVMENUSETUP_TITLE[];
   extern const pm_char STR_MAVLINK_BAUD_LABEL[];
   extern const pm_char STR_MAVLINK_INFOS[];

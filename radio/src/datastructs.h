@@ -580,7 +580,8 @@ PACK(struct FrSkyTelemetryData {
 PACK(struct MavlinkTelemetryData {
   uint8_t rc_rssi_scale:4;
   uint8_t pc_rssi_en:1;
-  uint8_t spare1:3;
+  uint8_t rssi_db:1;
+  uint8_t spare1:2;
   uint8_t spare2[3];
 });
 #endif

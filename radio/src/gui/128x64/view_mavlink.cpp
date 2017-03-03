@@ -314,13 +314,13 @@ void menuTelemetryMavlinkBattery(void) {
 	x = 0;	
     lcdDrawText(x, y, STR_MAVLINK_RC_RSSI_LABEL);
 	lcdDrawNumber(x + 7 * FWNUM, ynum, telemetry_data.rc_rssi, (DBLSIZE | UNSIGN));
-	lcdDrawText(x + 7 * FWNUM, ynum + FH, PSTR("%"));
+	lcdDrawText(x + 7 * FWNUM, ynum + FH, g_model.mavlink.rssi_db ? PSTR("dB") : PSTR("%"));
 	if (g_model.mavlink.pc_rssi_en)
 	{
 		x += 8 * (2 * FWNUM);
 		lcdDrawText(x, y, STR_MAVLINK_PC_RSSI_LABEL);
 		lcdDrawNumber(x + 7 * FWNUM, ynum, telemetry_data.pc_rssi, (DBLSIZE));
-		lcdDrawText(x + 7 * FWNUM, ynum + FH,  PSTR("%"));
+		lcdDrawText(x + 7 * FWNUM, ynum + FH, g_model.mavlink.rssi_db ? PSTR("dB") : PSTR("%"));
 	}
     
 }
@@ -496,7 +496,7 @@ void menuModelTelemetryMavlink(event_t event) {
 		case ITEM_MAVLINK_RC_RSSI_SCALE:
 			lcdDrawTextAlignedLeft(y, STR_MAVLINK_RC_RSSI_SCALE_LABEL);
 			lcdDrawNumber(VIEW_MAVLINK_2ND_COLUMN, y, (25 + g_model.mavlink.rc_rssi_scale * 5), attr|LEFT);
-			lcdDrawChar(lcdLastRightPos, y, '%');
+			lcdDrawText(lcdLastRightPos, y, g_model.mavlink.rssi_db ? PSTR("dB") : PSTR("%"));
 			if (attr) CHECK_INCDEC_MODELVAR(event, g_model.mavlink.rc_rssi_scale, 0, 15);
 			break;
 		case ITEM_MAVLINK_PC_RSSI_EN:
@@ -504,6 +504,14 @@ void menuModelTelemetryMavlink(event_t event) {
 				VIEW_MAVLINK_2ND_COLUMN,
 				y,
 				STR_MAVLINK_PC_RSSI_EN_LABEL,
+				attr,
+				event);
+			break;
+		case ITEM_MAVLINK_RSSI_DB:
+			g_model.mavlink.rssi_db = editCheckBox(g_model.mavlink.rssi_db,
+				VIEW_MAVLINK_2ND_COLUMN,
+				y,
+				STR_MAVLINK_RSSI_DB_LABEL,
 				attr,
 				event);
 			break;

@@ -69,6 +69,7 @@ const MenuHandlerFunc menuTabMav[] PROGMEM = {
 enum menuMavlinkSetupItems {
 	ITEM_MAVLINK_RC_RSSI_SCALE,
 	ITEM_MAVLINK_PC_RSSI_EN,
+	ITEM_MAVLINK_RSSI_DB,
 	ITEM_MAVLINK_MAX
 };
 
